@@ -13,4 +13,6 @@ You can apply effects on the image: ‘color inversion’ and a two-pass (horizo
 Have fun :)
 
 
-![image](https://github.com/mayomeir007/quad_in_space_Imgui01/assets/59373530/85c69fdb-2147-47ba-b2c1-52de87afb1bc)
+![image](https://github.com/mayomeir007/quad_in_space_Imgui01/assets/59373530/e9041c40-b511-42c0-b122-09c0873e46d9)
+
+
