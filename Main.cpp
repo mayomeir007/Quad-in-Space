@@ -36,6 +36,7 @@ void RenderPropertiesWindow(Quad& quad)
 
 	static bool imageLoaded = false;
 	static bool isInvert = false;
+	static bool isLockAR = false;
 	static float blurPercent = 0.0f;
 
 
@@ -87,22 +88,37 @@ void RenderPropertiesWindow(Quad& quad)
 	ImGui::Separator();
 	//sliders for controling the position, rotation and scale of the images
 	auto position = quad.GetPosition(); 
-	if (ImGui::SliderFloat3("Position", &position.x, -10.0f, 10.0f, "%.2f"))
+	if (ImGui::SliderFloat3("Position", &position.x, -10.0f, 10.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
 		quad.SetPosition(position.x, position.y, position.z);
 	}
 
 	auto rotation = quad.GetRotation();
-	if (ImGui::SliderFloat3("Rotation", &rotation.x, -360.0f, 360.0f, "%.2f"))
+	if (ImGui::SliderFloat3("Rotation", &rotation.x, -360.0f, 360.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
 		quad.SetRotation(rotation.x, rotation.y, rotation.z);
 	}
 
 	auto scale = quad.GetScale();
-	if (ImGui::SliderFloat2("Scale", &scale.x, 0.001f, 10.0f, "%.2f"))
+	if (ImGui::SliderFloat2("Scale", &scale.x, 0.001f, 10.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
+		if (isLockAR)
+		{
+			auto currentScale = quad.GetScale();
+			//scale.x and scale.y must be equal. Check which one was modified by the user and set the other one equal to it.
+			if (scale.x != currentScale.x)
+			{
+				scale.y = scale.x;
+			}
+			else
+			{
+				scale.x = scale.y;
+			}
+		}
 		quad.SetScale(scale.x, scale.y, scale.z);
 	}
+
+	ImGui::Checkbox("Lock aspect ratio", &isLockAR);
 
 	if (ImGui::Button("Default position"))
 	{
@@ -124,7 +140,7 @@ void RenderPropertiesWindow(Quad& quad)
 		}
 	}
 
-	if (ImGui::SliderFloat("Gaussian Blur", &blurPercent, 0.00f, 5.0f, "%.2f"))
+	if (ImGui::SliderFloat("Gaussian Blur", &blurPercent, 0.00f, 5.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp))
 	{
 		if (imageLoaded)
 		{
