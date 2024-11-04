@@ -6,6 +6,7 @@
 
 Texture::Texture()
 {
+	m_textureData = nullptr;
 	m_ID = 0;
 }
 
@@ -137,8 +138,8 @@ void Texture::Invert()
 
 void Texture::Blur(GLfloat blurFactor, bool isInvert)
 {
-	GLsizei bradiusHori = blurFactor * m_textureData->w / 2;
-	GLsizei bradiusVerti = blurFactor * m_textureData->h / 2;
+	GLsizei bradiusHori = GLsizei(blurFactor * m_textureData->w / 2);
+	GLsizei bradiusVerti = GLsizei(blurFactor * m_textureData->h / 2);
 
 	if (bradiusHori == 0 || bradiusVerti == 0)
 	{
@@ -147,8 +148,8 @@ void Texture::Blur(GLfloat blurFactor, bool isInvert)
 	}
 	else
 	{
-		HorizontalBlur(bradiusHori,bradiusHori*.3);
-		VerticalBlur(bradiusVerti, bradiusVerti * .3);
+		HorizontalBlur(bradiusHori,bradiusHori*.3f);
+		VerticalBlur(bradiusVerti, bradiusVerti * .3f);
 	}
 
 	if (isInvert)
@@ -191,9 +192,9 @@ void Texture::HorizontalBlur(GLsizei radius, GLfloat sigma)
 			for (int k = -radius; k <= radius; ++k) {
 				if (j + k >= 0 && j + k < width)
 				{
-					m_pixelsWithEffects[i * width * depth + j * depth] += kernel[k + radius] * pixels[i * width * depth + (j + k) * depth];
-					m_pixelsWithEffects[i * width * depth + j * depth + 1] += kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 1];
-					m_pixelsWithEffects[i * width * depth + j * depth + 2] += kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 2];
+					m_pixelsWithEffects[i * width * depth + j * depth] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth]);
+					m_pixelsWithEffects[i * width * depth + j * depth + 1] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 1]);
+					m_pixelsWithEffects[i * width * depth + j * depth + 2] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 2]);
 				}
 			}
 		}
@@ -229,14 +230,14 @@ void Texture::VerticalBlur(GLsizei radius, GLfloat sigma)
 			for (int k = -radius; k <= radius; ++k) {
 				if (i + k >= 0 && i + k < m_textureData->h)
 				{
-					RGBvalue.x += kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth];
-					RGBvalue.y += kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 1];
-					RGBvalue.z += kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 2];
+					RGBvalue.x += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth]);
+					RGBvalue.y += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 1]);
+					RGBvalue.z += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 2]);
 				}
 			}
-			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth] = RGBvalue.x;
-			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth + 1] = RGBvalue.y;
-			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth + 2] = RGBvalue.z;
+			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth] = Uint8(RGBvalue.x);
+			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth + 1] = Uint8(RGBvalue.y);
+			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth + 2] = Uint8(RGBvalue.z);
 
 		}
 	}
@@ -244,7 +245,7 @@ void Texture::VerticalBlur(GLsizei radius, GLfloat sigma)
 
 const char* Texture::GetExtension(const char* filename)
 {
-	GLsizei pathlen = strlen(filename);
+	size_t pathlen = strlen(filename);
 	const char* nameP = filename + pathlen;
 
 	while (nameP != filename)

@@ -7,6 +7,7 @@ Buffer::Buffer()
 	m_EBO = 0;
 	m_vertexVBO = 0;
 	m_colorVBO = 0;
+	m_textureVBO = 0;
 	m_totalVertices = 0;
 	m_hasEBO = false;
 }
