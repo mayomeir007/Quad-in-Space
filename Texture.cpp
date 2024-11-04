@@ -22,6 +22,7 @@ void Texture::Load(const std::string& filename)
 	if (!m_textureData)
 	{
 		std::cout << "Error loading texture." << std::endl;
+		return;
 	}
 
 	GLsizei width = m_textureData->w;
