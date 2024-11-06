@@ -41,6 +41,9 @@ void Texture::Load(const std::string& filename)
 	m_pixelsWithEffects = new Uint8[width * height * depth]();
 	std::copy_n(pixels, width * height * depth, m_pixelsWithEffects);
 
+	//OpenGL by default expects the image rows index to be aligned to 4 bytes, meaning images rows must be divisible by 4. 
+	// This commend tells openGL that the image rows' index can be any value, in orther words sets to an alignment of 1 byte. 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
