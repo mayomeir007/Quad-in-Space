@@ -20,9 +20,9 @@ Quad::Quad():m_model(1.0f),m_position(0.0f),m_rotation(0.0f),m_scale(1.0f)
 
 	//data that represents UV coordinates for the quad
 	GLfloat UVs[] = { 0.0f, 0.0f,
-					  0.5f, 0.0f,
-					  0.5f, 0.5f,
-					  0.0f, 0.5f };
+					  1.f, 0.0f,
+					  1.f, 1.f,
+					  0.0f, 1.f };
 
 	//index buffer to control the rendering
 	GLuint indices[] = { 0, 1, 3,

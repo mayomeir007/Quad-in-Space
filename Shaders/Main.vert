@@ -15,7 +15,7 @@ uniform mat4 proj;
 void main()
 {
 	colorOut = colorIn;
-	textureOut = 2*textureIn;
+	textureOut = textureIn;
 
 	vertexOut = (model * vec4(vertexIn, 1.0)).xyz;
 
