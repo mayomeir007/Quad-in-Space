@@ -152,8 +152,8 @@ void Texture::Blur(GLfloat blurFactor, bool isInvert)
 	}
 	else
 	{
-		HorizontalBlur(bradiusHori,bradiusHori*.3f);
-		VerticalBlur(bradiusVerti, bradiusVerti * .3f);
+		Uint8* temp = HorizontalBlur(bradiusHori, bradiusHori * .3f);
+		VerticalBlur(temp, bradiusVerti, bradiusVerti * .3f);
 	}
 
 	if (isInvert)
@@ -163,7 +163,7 @@ void Texture::Blur(GLfloat blurFactor, bool isInvert)
 }
 
 
-void Texture::HorizontalBlur(GLsizei radius, GLfloat sigma)
+Uint8* Texture::HorizontalBlur(GLsizei radius, GLfloat sigma)
 {
 	// Create the horizontal Gaussian kernel
 	int kernelSize = 2 * radius + 1;
@@ -187,25 +187,27 @@ void Texture::HorizontalBlur(GLsizei radius, GLfloat sigma)
 	const Uint8* pixels = (Uint8*)m_textureData->pixels;
 
 	// Apply the horizontal blur pass
+	Uint8* tempPixels = new Uint8[width * m_textureData->h * depth];
 	for (int i = 0; i < m_textureData->h; ++i) {
 		for (int j = 0; j < width; ++j) {
-			m_pixelsWithEffects[i * width * depth + j * depth] = 0; //Red channel
-			m_pixelsWithEffects[i * width * depth + j * depth + 1] = 0; //green channel
-			m_pixelsWithEffects[i * width * depth + j * depth + 2] = 0; //blue channel
+			tempPixels[i * width * depth + j * depth] = 0; //Red channel
+			tempPixels[i * width * depth + j * depth + 1] = 0; //green channel
+			tempPixels[i * width * depth + j * depth + 2] = 0; //blue channel
 
 			for (int k = -radius; k <= radius; ++k) {
 				if (j + k >= 0 && j + k < width)
 				{
-					m_pixelsWithEffects[i * width * depth + j * depth] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth]);
-					m_pixelsWithEffects[i * width * depth + j * depth + 1] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 1]);
-					m_pixelsWithEffects[i * width * depth + j * depth + 2] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 2]);
+					tempPixels[i * width * depth + j * depth] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth]);
+					tempPixels[i * width * depth + j * depth + 1] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 1]);
+					tempPixels[i * width * depth + j * depth + 2] += Uint8(kernel[k + radius] * pixels[i * width * depth + (j + k) * depth + 2]);
 				}
 			}
 		}
 	}
+	return tempPixels;
 }
 
-void Texture::VerticalBlur(GLsizei radius, GLfloat sigma)
+void Texture::VerticalBlur(Uint8* tempPixels, GLsizei radius, GLfloat sigma)
 {
 	// Create the vertical Gaussian kernel
 	int kernelSize = 2 * radius + 1;
@@ -234,9 +236,9 @@ void Texture::VerticalBlur(GLsizei radius, GLfloat sigma)
 			for (int k = -radius; k <= radius; ++k) {
 				if (i + k >= 0 && i + k < m_textureData->h)
 				{
-					RGBvalue.x += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth]);
-					RGBvalue.y += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 1]);
-					RGBvalue.z += float(kernel[k + radius] * m_pixelsWithEffects[(i + k) * m_textureData->w * depth + j * depth + 2]);
+					RGBvalue.x += float(kernel[k + radius] * tempPixels[(i + k) * m_textureData->w * depth + j * depth]);
+					RGBvalue.y += float(kernel[k + radius] * tempPixels[(i + k) * m_textureData->w * depth + j * depth + 1]);
+					RGBvalue.z += float(kernel[k + radius] * tempPixels[(i + k) * m_textureData->w * depth + j * depth + 2]);
 				}
 			}
 			m_pixelsWithEffects[i * m_textureData->w * depth + j * depth] = Uint8(RGBvalue.x);

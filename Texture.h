@@ -24,8 +24,8 @@ public:
 	void Blur(GLfloat blurFactor, bool isInvert);
 
 private:
-	void HorizontalBlur(GLsizei radius, GLfloat sigma);
-	void VerticalBlur(GLsizei radius, GLfloat sigma);
+	Uint8* HorizontalBlur(GLsizei radius, GLfloat sigma);
+	void VerticalBlur(Uint8* tempPixels, GLsizei radius, GLfloat sigma);
 	const char* GetExtension(const char* filename);
 
 	SDL_Surface* m_textureData; //includes  pixels of loaded image without the current effects applied on it
