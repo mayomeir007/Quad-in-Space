@@ -131,6 +131,10 @@
       <AdditionalLibraryDirectories>Libraries\SDL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y $(ProjectDir)\Libraries\SDL\bin\SDL2_image.dll $(OutDir)
+xcopy /y $(ProjectDir)\Libraries\SDL\bin\SDL2.dll $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
