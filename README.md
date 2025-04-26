@@ -1,5 +1,3 @@
-# quad_in_space_Imgui01
-
 3D Desktop GUI - ‘Quad in Space’
 
 ‘Quad in Space’ is a Windows application that allows the user to display an image from a file in a 3d space, move it around, stretch it, and also apply effects on it. The user can also save the displayed image, with or without the effects they applied on it. Here are the features described in detail:
