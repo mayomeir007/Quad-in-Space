@@ -1,4 +1,5 @@
-3D Desktop GUI - ‘Quad in Space’
+This project demonstrates interactive OpenGL rendering, texture loading, 3D transformations, GUI-driven parameter control, and basic image-processing effects such as color inversion and two-pass Gaussian blur.
+### 3D Desktop GUI - ‘Quad in Space’ ###
 
 ‘Quad in Space’ is a Windows application that allows the user to display an image from a file in a 3d space, move it around, stretch it, and also apply effects on it. The user can also save the displayed image, with or without the effects they applied on it. Here are the features described in detail:
 ‘Load new image’ button adds an image selected from disk onto a quad in 3d space. You can replace the image with a different one by clicking the button again. (NOTE: Supported file types are ‘jpg’, and ‘png’, in formats of one,three, or four color channels).
